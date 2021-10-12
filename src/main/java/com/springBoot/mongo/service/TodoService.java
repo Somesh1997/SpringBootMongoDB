@@ -15,5 +15,5 @@ public interface TodoService {
 	public User getSingleTodo(String id) throws TodoCoollectionException;
 
 	public void updateTodo(String id, User user) throws TodoCoollectionException;
-
+	public void deleteTodoById(String id) throws TodoCoollectionException;
 }

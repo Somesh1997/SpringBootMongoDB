@@ -63,33 +63,32 @@ public class TodoController {
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
-	
+
 	@PutMapping("/todos/{id}")
 	public ResponseEntity<?> updateById(@PathVariable String id, @RequestBody User user) {
-		Optional<User> optionaltdu = repository.findById(id);
-		if (optionaltdu.isPresent()) {
-			User todoToSave = optionaltdu.get();
-			todoToSave.setCompleted(user.getCompleted() != null ? user.getCompleted() : todoToSave.getCompleted());
-			todoToSave.setCreatedAt(user.getCreatedAt() != null ? user.getCreatedAt() : todoToSave.getCreatedAt());
-			todoToSave.setDesc(user.getDesc() != null ? user.getDesc() : todoToSave.getDesc());
-			todoToSave.setTodo(user.getTodo() != null ? user.getTodo() : todoToSave.getTodo());
-			todoToSave.setUpdatedAt(new Date(System.currentTimeMillis()));
-			repository.save(todoToSave);
-			return new ResponseEntity(todoToSave, HttpStatus.OK);
-		} else {
-			return new ResponseEntity("ToDo Not Found id " + id, HttpStatus.NOT_FOUND);
-		}
 
+		try {
+			service.updateTodo(id, user);
+			return new ResponseEntity("Update Todo with id " + id, HttpStatus.OK);
+		} catch (ConstraintViolationException e) {
+			return new ResponseEntity(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+
+		} catch (TodoCoollectionException e) {
+			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
 	}
 
 	@DeleteMapping("/todos/{id}")
 	public ResponseEntity<?> deleteById(@PathVariable String id) {
 		try {
-			repository.deleteById(id);
+			service.deleteTodoById(id);
 			return new ResponseEntity("SuccessFully Deleted with id : " + id, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	
+	
 
 }

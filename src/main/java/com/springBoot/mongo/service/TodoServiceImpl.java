@@ -63,6 +63,9 @@ public class TodoServiceImpl implements TodoService {
 		Optional<User> todoWithSameName = repository.findByTodo(user.getTodo());
 
 		if (userWithId.isPresent()) {
+			if (todoWithSameName.isPresent() && !todoWithSameName.get().getId().equals(id)) {
+				throw new TodoCoollectionException(TodoCoollectionException.TodoAlreadyExists());
+			}
 			User user2 = userWithId.get();
 			user2.setTodo(user.getTodo());
 			user2.setDesc(user.getDesc());
@@ -73,6 +76,17 @@ public class TodoServiceImpl implements TodoService {
 		} else {
 			throw new TodoCoollectionException(TodoCoollectionException.NotFoundException(id));
 		}
+	}
+
+	@Override
+	public void deleteTodoById(String id) throws TodoCoollectionException {
+		Optional<User> tododtu = repository.findById(id);
+		if (!tododtu.isPresent()) {
+			throw new TodoCoollectionException(TodoCoollectionException.NotFoundException(id));
+		} else {
+			repository.deleteById(id);
+		}
+
 	}
 
 }
