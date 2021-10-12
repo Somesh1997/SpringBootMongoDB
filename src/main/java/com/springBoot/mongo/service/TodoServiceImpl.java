@@ -56,4 +56,23 @@ public class TodoServiceImpl implements TodoService {
 		// return null;
 	}
 
+	@Override
+	public void updateTodo(String id, User user) throws TodoCoollectionException {
+		Optional<User> userWithId = repository.findById(id);
+
+		Optional<User> todoWithSameName = repository.findByTodo(user.getTodo());
+
+		if (userWithId.isPresent()) {
+			User user2 = userWithId.get();
+			user2.setTodo(user.getTodo());
+			user2.setDesc(user.getDesc());
+			user2.setCompleted(user.getCompleted());
+			user2.setUpdatedAt(new Date(System.currentTimeMillis()));
+			repository.save(user2);
+
+		} else {
+			throw new TodoCoollectionException(TodoCoollectionException.NotFoundException(id));
+		}
+	}
+
 }

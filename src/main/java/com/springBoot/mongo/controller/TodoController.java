@@ -60,11 +60,10 @@ public class TodoController {
 			User user = service.getSingleTodo(id);
 			return new ResponseEntity(user, HttpStatus.OK);
 		} catch (Exception e) {
-			return new ResponseEntity("user not found", HttpStatus.NOT_FOUND);
+			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
-
 	}
-
+	
 	@PutMapping("/todos/{id}")
 	public ResponseEntity<?> updateById(@PathVariable String id, @RequestBody User user) {
 		Optional<User> optionaltdu = repository.findById(id);
