@@ -43,4 +43,17 @@ public class TodoServiceImpl implements TodoService {
 		// return null;
 	}
 
+	@Override
+	public User getSingleTodo(String id) throws TodoCoollectionException {
+
+		Optional<User> user = repository.findById(id);
+		if (user.isPresent()) {
+			return user.get();
+		} else {
+			throw new TodoCoollectionException(TodoCoollectionException.NotFoundException(id));
+		}
+
+		// return null;
+	}
+
 }
